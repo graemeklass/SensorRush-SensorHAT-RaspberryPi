@@ -1,13 +1,13 @@
 #SensorRush.py
 #Author: Graeme Klass (graemeklass@gmail.com)
 #Description: A script to get all sensor data from the Sense HAT adaptor board for the Raspberry Pi and send to the SensorRush API
-#
+#Python version: 3
 
-from sense_hat import SenseHat
+from sense_hat import SenseHat #sudo apt-get install sense-hat^C
 import json
 import datetime
-import requests
-from collections import OrderedDict
+import requests #sudo pip-3.2 install requests
+from collections import OrderedDict #
 
 #**********************************************
 #Replace below your username, apikey - below will work but is for demo purposes only.
