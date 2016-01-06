@@ -1,4 +1,3 @@
-#SensorRush.py
 #Author: Graeme Klass (graemeklass@gmail.com)
 #Description: A script to get all sensor data from the Sense HAT adaptor board for the Raspberry Pi and send to the SensorRush API
 #Python version: 3
