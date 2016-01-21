@@ -43,6 +43,7 @@ Humidity = 0.0
 Pressure = 0.0
 BoardTemperature = 0.0
 start = time.time()
+listSample = []
 while True:
 	AccX += sense.accelerometer_raw['x']
 	AccY += sense.accelerometer_raw['y']
@@ -67,8 +68,7 @@ while True:
 	counter += 1
 
 	end = time.time()
-	if (end - start >= TIMER): #let's send
-		listSample = [] 
+	if (end - start >= TIMER): #let's send 
 		sample = OrderedDict() #we use Ordered Dictionary so that when we convert this to JSON format the field order is presered.
 		sample['ts'] = datetime.datetime.now().isoformat() #timestample (SensorRush API requires "ts" field to be a timestamp)
 		sample['AccX'] = AccX / counter
@@ -93,27 +93,34 @@ while True:
 
 		listSample.append(sample)
 		jsonVal = json.dumps(listSample)  #convert into JSON formatted array
-	
-		r = requests.post('http://sensorrush.net/{0}/{1}/{2}/Insert'.format(userName, apiKey, sensorName), data = {'': jsonVal}) #the following sends an HTTP post to the SensorRush API. You need to have your own username and API key
-		print('Sent at {0}'.format(time.ctime()))
-		start = time.time()
-		counter = 0
-		AccX = 0.0
-		AccY = 0.0
-		AccZ = 0.0
-		AccPitch = 0.0
-		AccYaw = 0.0
-		AccRoll = 0.0
-		MagX = 0.0
-		MagY = 0.0
-		MagZ = 0.0
-		Azimuth = 0.0
-		GyroX = 0.0
-		GyroY = 0.0
-		GyroZ = 0.0
-		GyroPitch = 0.0
-		GyroYaw = 0.0
-		GyroRoll = 0.0
-		Humidity = 0.0
-		Pressure = 0.0
-		BoardTemperature = 0.0
+
+	 #the following sends an HTTP post to the SensorRush API. You need to have your own username and API key
+		try:
+			r = requests.post('http://sensorrush.net/{0}/{1}/{2}/Insert'.format(userName, apiKey, sensorName), data = {'': jsonVal})
+
+			print('{0}: Sent {1} averaged data point.'.format(time.ctime(), len(listSample) ))
+			start = time.time()
+			counter = 0
+			AccX = 0.0
+			AccY = 0.0
+			AccZ = 0.0
+			AccPitch = 0.0
+			AccYaw = 0.0
+			AccRoll = 0.0
+			MagX = 0.0
+			MagY = 0.0
+			MagZ = 0.0
+			Azimuth = 0.0
+			GyroX = 0.0
+			GyroY = 0.0
+			GyroZ = 0.0
+			GyroPitch = 0.0
+			GyroYaw = 0.0
+			GyroRoll = 0.0
+			Humidity = 0.0
+			Pressure = 0.0
+			BoardTemperature = 0.0
+			listSample = []
+		except requests.exceptions.ConnectionError:
+			print('{0}: Connection Error... still collecting samples and will upload at the next scheduled time in {1} secs'.format(time.ctime(), TIMER))
+			start=time.time()
